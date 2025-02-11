@@ -136,6 +136,6 @@ MIT License - Feel free to use this code for your own projects.
 
 We welcome contributions! Please feel free to submit a Pull Request. 
 
-AI Disclosure ## <img src="public/alien_left.png" alt="AI Icon" width="25"/> 
+## AI Disclosure <img src="public/alien_left.png" alt="AI Icon" width="25"/> 
 
 This project was heavily created and assisted by AI technologies. We believe in transparency and acknowledge the significant role of artificial intelligence in shaping this tool's development. 
