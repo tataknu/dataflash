@@ -1,0 +1,30 @@
+{
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack --mode development --watch",
+    "setup": "mkdir -p dist icons && node generate-icons.js && npm run build"
+  },
+  "name": "alien-chat-extension",
+  "version": "1.0.0",
+  "main": "background.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Chrome extension for alien chat interface",
+  "dependencies": {
+    "firebase": "^10.13.2",
+    "openai": "^4.24.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.5",
+    "@babel/preset-env": "^7.22.5",
+    "babel-loader": "^9.1.2",
+    "canvas": "^3.0.1",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.10.0",
+    "style-loader": "^3.3.4",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.2.0"
+  }
+}
