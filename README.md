@@ -19,10 +19,28 @@ DataFlash brings powerful data analysis directly to your browser. Perfect for da
    - Toggle "Developer mode" in the top right
    - Click "Load unpacked" and select the extension directory
 
+## ⚙️ Supported Sites
+
+DataFlash works natively with Databricks! You can use it right away on any Databricks workspace without additional configuration.
+
+To use DataFlash on other sites:
+
+1. Open `manifest.json`
+2. Find the `host_permissions` section and add your domain:
+   ```json
+   "host_permissions": [
+     "*://*.databricks.com/*",
+     "*://your-domain.com/*"
+   ]
+   ```
+3. Reload the extension in Chrome:
+   - Go to `chrome://extensions/`
+   - Find DataFlash
+   - Click the refresh icon
+
 ## 🌟 What Can DataFlash Do For You?
 
 - **Instant Analysis**: Get immediate data insights while browsing
-- **AI-Powered Validation**: Smart pattern recognition and validation
 - **Zero Setup**: Works right in your browser - no configuration needed
 - **Workflow Integration**: Analyze data without switching contexts
 
@@ -37,7 +55,6 @@ Data professionals often need to:
 ## ✨ Features
 
 - **Instant Analysis**: Get immediate insights about your data directly in the browser
-- **AI-Powered Validation**: Leverage artificial intelligence to validate data patterns
 - **Context-Aware**: Works seamlessly within your existing workflow
 - **No Setup Required**: Start analyzing data right in your browser without additional configuration
 
@@ -59,10 +76,47 @@ DataFlash integrates with your browser to:
 
 ## 🔧 Development
 
-Key components:
-- `manifest.json`: Extension configuration
-- `src/content.js`: Content script for data detection and analysis
-- `src/config.js`: Configuration settings
+### Project Structure
+```
+src/
+├── background.js        # Chrome extension background script
+├── js/
+    ├── components/     # Reusable UI components
+    ├── constants/      # Application constants and configurations
+    ├── services/       # Business logic and API services
+    ├── styles/        # Component-specific styles
+    ├── utils/         # Helper functions and utilities
+    └── main.js        # Main application entry point
+```
+
+### Key Components
+- `manifest.json`: Extension configuration and permissions
+- `background.js`: Chrome extension background script
+- `src/js/main.js`: Main entry point for the application
+- `webpack.config.js`: Build configuration with aliases and optimizations
+
+### Development Setup
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Start development build with watch mode:
+   ```bash
+   npm run dev
+   ```
+
+3. For production build:
+   ```bash
+   npm run build
+   ```
+
+### Build Features
+- Babel transpilation for modern JavaScript
+- CSS processing with style-loader
+- Source maps for debugging
+- Code splitting and optimization
+- Hot module replacement in development
 
 ## 🆚 Why DataFlash?
 
@@ -81,3 +135,7 @@ MIT License - Feel free to use this code for your own projects.
 ## 🤝 Contributing
 
 We welcome contributions! Please feel free to submit a Pull Request. 
+
+AI Disclosure ## <img src="public/alien_left.png" alt="AI Icon" width="25"/> 
+
+This project was heavily created and assisted by AI technologies. We believe in transparency and acknowledge the significant role of artificial intelligence in shaping this tool's development. 
