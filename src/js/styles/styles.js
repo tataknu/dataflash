@@ -149,11 +149,69 @@ export const contentStyles = `
   border: 1px solid #e9ecef;
 }
 
-.dataflash-metric {
+.dataflash-df-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 0;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.dataflash-df-title h4 {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dataflash-save-df-btn {
+  background: #e7f5ff;
+  border: 1px solid #74c0fc;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 4px 12px;
+  font-size: 14px;
+  color: #1971c2;
+  height: 28px;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.dataflash-save-df-btn:hover {
+  background: #d0ebff;
+  border-color: #339af0;
+  transform: translateY(-1px);
+}
+
+.dataflash-metrics-header {
+  margin-bottom: 8px;
+}
+
+.dataflash-metric-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.dataflash-metric-row.header {
+  font-weight: 600;
+  color: #495057;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.dataflash-metric-col {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dataflash-metric-col:last-child {
+  text-align: right;
 }
 
 .dataflash-sum-container {
@@ -395,14 +453,76 @@ input:checked + .dataflash-toggle-slider:before {
 }
 
 .dataflash-saved-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.dataflash-saved-item.dataframe {
+  padding: 12px 0;
+}
+
+.dataflash-saved-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 0;
+  margin-bottom: 12px;
+}
+
+.dataflash-saved-table {
+  background: #f8f9fa;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #e9ecef;
+}
+
+.dataflash-table-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 120px;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #e9ecef;
+  font-weight: 600;
+  color: #495057;
+}
+
+.dataflash-table-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 120px;
+  gap: 12px;
+  padding: 8px 12px;
+  align-items: center;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.dataflash-table-row:last-child {
+  border-bottom: none;
+}
+
+.dataflash-table-col {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dataflash-table-col:nth-child(2) {
+  text-align: right;
+}
+
+.dataflash-column-controls {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.dataflash-saved-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .dataflash-saved-label {
-  color: #495057;
+  color: #1971c2;
+  font-weight: 500;
   cursor: pointer;
   padding: 2px 6px;
   border-radius: 4px;
@@ -410,20 +530,16 @@ input:checked + .dataflash-toggle-slider:before {
 }
 
 .dataflash-saved-label:hover {
-  background-color: #e9ecef;
+  background-color: #e7f5ff;
 }
 
 .dataflash-saved-value {
-  color: #1a1a1a;
-  font-weight: 500;
+  color: #868e96;
+  font-size: 12px;
 }
 
-.dataflash-saved-controls {
-  display: flex;
-  gap: 4px;
-}
-
-.dataflash-saved-controls button {
+.dataflash-saved-controls button,
+.dataflash-column-controls button {
   background: #f8f9fa;
   border: 1px solid #e9ecef;
   padding: 4px;
@@ -438,37 +554,43 @@ input:checked + .dataflash-toggle-slider:before {
   color: #495057;
 }
 
-.dataflash-saved-controls button:hover {
+.dataflash-saved-controls button:hover,
+.dataflash-column-controls button:hover {
   background: #e7f5ff;
   border-color: #74c0fc;
   transform: translateY(-1px);
 }
 
-.dataflash-saved-controls .dataflash-copy-btn:hover {
+.dataflash-saved-controls .dataflash-copy-btn:hover,
+.dataflash-column-controls .dataflash-copy-btn:hover {
   background: #e7f5ff;
   border-color: #74c0fc;
   color: #1971c2;
 }
 
-.dataflash-saved-controls .dataflash-stats-btn:hover {
+.dataflash-saved-controls .dataflash-stats-btn:hover,
+.dataflash-column-controls .dataflash-stats-btn:hover {
   background: #e6fcf5;
   border-color: #63e6be;
   color: #0ca678;
 }
 
-.dataflash-saved-controls .dataflash-load-btn:hover {
+.dataflash-saved-controls .dataflash-load-btn:hover,
+.dataflash-column-controls .dataflash-load-btn:hover {
   background: #fff3bf;
   border-color: #ffd43b;
   color: #f08c00;
 }
 
-.dataflash-saved-controls .dataflash-delete-btn:hover {
+.dataflash-saved-controls .dataflash-delete-btn:hover,
+.dataflash-column-controls .dataflash-delete-btn:hover {
   background: #ffe3e3;
   border-color: #ffa8a8;
   color: #e03131;
 }
 
-.dataflash-saved-controls svg {
+.dataflash-saved-controls svg,
+.dataflash-column-controls svg {
   width: 13px;
   height: 13px;
   fill: none;

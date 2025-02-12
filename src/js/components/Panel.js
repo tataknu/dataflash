@@ -189,15 +189,41 @@ export class Panel {
       className: 'dataflash-current-metrics'
     });
     
+    // Add df1 label and save button if metrics exist
+    if (metrics.length > 0) {
+      const headerDiv = DOMService.createElement('div', {
+        className: 'dataflash-df-header',
+        innerHTML: `
+          <div class="dataflash-df-title">
+            <h4>df1</h4>
+          </div>
+          <div class="dataflash-df-actions">
+            <button class="dataflash-save-df-btn" title="Save Dataframe">+</button>
+            <button class="dataflash-clear-df-btn" title="Clear Dataframe">-</button>
+          </div>
+        `
+      });
+      currentMetricsDiv.appendChild(headerDiv);
+    }
+
+    // Add table header
+    const tableHeader = DOMService.createElement('div', {
+      className: 'dataflash-metrics-header',
+      innerHTML: `
+        <div class="dataflash-metric-row header">
+          <div class="dataflash-metric-col">Columns</div>
+          <div class="dataflash-metric-col">Total Sum</div>
+        </div>
+      `
+    });
+    currentMetricsDiv.appendChild(tableHeader);
+    
     metrics.forEach((metric, index) => {
       const metricDiv = DOMService.createElement('div', {
-        className: 'dataflash-metric',
+        className: 'dataflash-metric-row',
         innerHTML: `
-          <span>${metric.label}:</span>
-          <div class="dataflash-sum-container">
-            <span class="dataflash-current-sum">${metric.sum.toLocaleString()}</span>
-            <button class="dataflash-add-btn" data-index="${index}">+</button>
-          </div>
+          <div class="dataflash-metric-col">${metric.label}</div>
+          <div class="dataflash-metric-col">${metric.sum.toLocaleString()}</div>
         `
       });
       currentMetricsDiv.appendChild(metricDiv);
@@ -230,37 +256,75 @@ export class Panel {
     const savedDisplay = document.querySelector('.dataflash-saved');
     if (!savedDisplay) return;
 
-    savedDisplay.innerHTML = activeTab.savedSums.map((sum, index) => `
-      <div class="dataflash-saved-item">
-        <span class="dataflash-saved-label" data-index="${index}">${sum.label}</span>
-        <span class="dataflash-saved-value">${sum.value.toLocaleString()}</span>
-        <div class="dataflash-saved-controls">
-          <button class="dataflash-copy-btn" data-index="${index}" title="Copy">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-          </button>
-          ${!this.calculator.isEnabled ? `
-            <button class="dataflash-stats-btn" data-index="${index}" title="Statistics">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M18 20V10M12 20V4M6 20v-6"/>
-              </svg>
-            </button>
-            <button class="dataflash-load-btn" data-index="${index}" title="Load">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 8l-5-5-5 5M12 3v12"/>
-              </svg>
-            </button>
-          ` : ''}
-          <button class="dataflash-delete-btn" data-index="${index}" title="Delete">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    `).join('');
+    savedDisplay.innerHTML = activeTab.savedSums.map((sum, index) => {
+      // If it's a dataframe (has columns)
+      if (sum.columns) {
+        return `
+          <div class="dataflash-saved-item dataframe">
+            <div class="dataflash-saved-header">
+              <span class="dataflash-saved-label" data-index="${index}">${sum.label}</span>
+              <button class="dataflash-delete-btn" data-index="${index}" title="Delete Dataframe">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
+            <div class="dataflash-saved-table">
+              <div class="dataflash-table-header">
+                <div class="dataflash-table-col">Column</div>
+                <div class="dataflash-table-col">Total Amount</div>
+                <div class="dataflash-table-col">Actions</div>
+              </div>
+              ${sum.columns.map((col, colIndex) => `
+                <div class="dataflash-table-row">
+                  <div class="dataflash-table-col">${col.label}</div>
+                  <div class="dataflash-table-col">${col.sum.toLocaleString()}</div>
+                  <div class="dataflash-table-col">
+                    <div class="dataflash-column-controls">
+                      <button class="dataflash-copy-btn" data-index="${index}" data-col="${colIndex}" title="Copy">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                      </button>
+                      ${!this.calculator.isEnabled ? `
+                        <button class="dataflash-stats-btn" data-index="${index}" data-col="${colIndex}" title="Statistics">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M18 20V10M12 20V4M6 20v-6"/>
+                          </svg>
+                        </button>
+                        <button class="dataflash-load-btn" data-index="${index}" data-col="${colIndex}" title="Load">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                          </svg>
+                        </button>
+                      ` : ''}
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else {
+        // Regular saved sum (not a dataframe)
+        return `
+          <div class="dataflash-saved-item">
+            <div class="dataflash-saved-info">
+              <span class="dataflash-saved-label" data-index="${index}">${sum.label}</span>
+              <span class="dataflash-saved-value">${sum.value.toLocaleString()}</span>
+            </div>
+            <div class="dataflash-saved-controls">
+              <button class="dataflash-delete-btn" data-index="${index}" title="Delete">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    }).join('');
 
     this.addSavedItemEventListeners(savedDisplay, activeTab);
   }
@@ -270,25 +334,38 @@ export class Panel {
    * @private
    */
   addMetricEventListeners(container, metrics) {
-    container.querySelectorAll('.dataflash-add-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const index = parseInt(btn.dataset.index);
-        const metric = metrics[index];
-        
+    const saveButton = container.querySelector('.dataflash-save-df-btn');
+    const clearButton = container.querySelector('.dataflash-clear-df-btn');
+
+    if (saveButton) {
+      saveButton.addEventListener('click', () => {
         const activeTab = this.tabs.getActiveTab();
         if (activeTab) {
           if (!activeTab.savedSums) {
             activeTab.savedSums = [];
           }
           
+          // Save all metrics as one dataframe entry
           activeTab.savedSums.push({
-            value: metric.sum,
-            label: metric.label,
-            numbers: metric.numbers,
-            isNumeric: metric.isNumeric
+            value: metrics.reduce((sum, m) => sum + m.sum, 0),
+            label: 'df1',
+            numbers: metrics.map(m => m.numbers).flat(),
+            isNumeric: true,
+            columns: metrics.map(m => ({
+              label: m.label,
+              sum: m.sum,
+              numbers: m.numbers,
+              isNumeric: m.isNumeric
+            }))
           });
           
           this.updateSavedDisplay();
+
+          // Clear the current metrics display
+          const currentMetricsDiv = document.querySelector('.dataflash-current-metrics');
+          if (currentMetricsDiv) {
+            currentMetricsDiv.innerHTML = '';
+          }
         }
         
         const textarea = document.querySelector('.dataflash-input');
@@ -296,11 +373,25 @@ export class Panel {
           textarea.value = '';
           textarea.dispatchEvent(new Event('input'));
         }
-
-        metrics.splice(index, 1);
-        this.updateUI(metrics);
       });
-    });
+    }
+
+    if (clearButton) {
+      clearButton.addEventListener('click', () => {
+        // Clear the current metrics display
+        const currentMetricsDiv = document.querySelector('.dataflash-current-metrics');
+        if (currentMetricsDiv) {
+          currentMetricsDiv.innerHTML = '';
+        }
+        
+        // Clear the textarea
+        const textarea = document.querySelector('.dataflash-input');
+        if (textarea) {
+          textarea.value = '';
+          textarea.dispatchEvent(new Event('input'));
+        }
+      });
+    }
   }
 
   /**
@@ -341,14 +432,24 @@ export class Panel {
     container.querySelectorAll('.dataflash-copy-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const index = parseInt(btn.dataset.index);
-        const value = activeTab.savedSums[index].value;
+        const colIndex = btn.dataset.col ? parseInt(btn.dataset.col) : null;
+        
+        let value;
+        if (colIndex !== null) {
+          // Copy column data
+          const column = activeTab.savedSums[index].columns[colIndex];
+          value = column.numbers.join('\n');
+        } else {
+          // Copy regular sum
+          value = activeTab.savedSums[index].value;
+        }
         
         await DOMService.copyToClipboard(value.toString());
         
-        const originalText = btn.textContent;
-        btn.textContent = '✓';
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '✓';
         setTimeout(() => {
-          btn.textContent = originalText;
+          btn.innerHTML = originalHTML;
         }, 1000);
       });
     });
@@ -357,33 +458,12 @@ export class Panel {
     container.querySelectorAll('.dataflash-load-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const index = parseInt(btn.dataset.index);
-        const savedItem = activeTab.savedSums[index];
+        const colIndex = parseInt(btn.dataset.col);
+        const column = activeTab.savedSums[index].columns[colIndex];
         
         const textarea = document.querySelector('.dataflash-input');
-        if (textarea && savedItem.numbers && savedItem.numbers.length > 0) {
-          const currentContent = textarea.value;
-          
-          if (!currentContent) {
-            textarea.value = `${savedItem.label}\n${savedItem.numbers.join('\n')}`;
-          } else {
-            const existingLines = currentContent.split('\n');
-            const newNumbers = savedItem.numbers;
-            
-            while (existingLines.length < newNumbers.length + 1) {
-              existingLines.push('');
-            }
-            
-            existingLines[0] = existingLines[0] ? 
-              `${existingLines[0]}\t${savedItem.label}` : savedItem.label;
-            
-            newNumbers.forEach((num, i) => {
-              existingLines[i + 1] = existingLines[i + 1] ? 
-                `${existingLines[i + 1]}\t${num}` : num;
-            });
-            
-            textarea.value = existingLines.join('\n');
-          }
-          
+        if (textarea && column.numbers && column.numbers.length > 0) {
+          textarea.value = `${column.label}\n${column.numbers.join('\n')}`;
           textarea.dispatchEvent(new Event('input'));
         }
       });
@@ -402,10 +482,11 @@ export class Panel {
     container.querySelectorAll('.dataflash-stats-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const index = parseInt(btn.dataset.index);
-        const savedItem = activeTab.savedSums[index];
+        const colIndex = parseInt(btn.dataset.col);
+        const column = activeTab.savedSums[index].columns[colIndex];
         
-        if (savedItem.numbers && savedItem.numbers.length > 0) {
-          const numbers = savedItem.numbers.map(n => {
+        if (column.numbers && column.numbers.length > 0) {
+          const numbers = column.numbers.map(n => {
             return typeof n === 'string' ? parseFloat(n.replace(/,/g, '')) : parseFloat(n);
           });
           
@@ -415,7 +496,7 @@ export class Panel {
           const min = Math.min(...numbers);
           const max = Math.max(...numbers);
           
-          const statsText = `Statistics for ${savedItem.label}:
+          const statsText = `Statistics for ${column.label}:
 Count: ${count}
 Average: ${average.toLocaleString()}
 Min: ${min.toLocaleString()}
