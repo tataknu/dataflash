@@ -871,8 +871,8 @@ export class Panel {
     if (!panel) return;
 
     // If panel is minimized, restore it first
-    if (this.isMinimized) {
-      this.toggleMinimize();
+    if (panel.classList.contains('minimized')) {
+      panel.classList.remove('minimized');
     }
 
     // Reset position and transform
@@ -882,12 +882,20 @@ export class Panel {
     
     // Reset size to initial dimensions
     panel.style.width = `${this.initialWidth}px`;
-    panel.style.height = `${this.initialHeight}px`;
+    panel.style.height = 'auto';
+    panel.style.minHeight = '100px';
+    panel.style.maxHeight = '90vh';
+    panel.style.padding = '16px';
+    panel.style.borderRadius = '12px';
+    
+    // Remove expanded state if present
+    panel.classList.remove('expanded');
     
     // Reset dragging state
     this.isDragging = false;
     this.currentX = 0;
     this.currentY = 0;
+    this.isMinimized = false;
   }
 
   toggleMinimize() {
