@@ -163,11 +163,36 @@ export const contentStyles = `
   font-weight: 600;
 }
 
+.dataflash-input-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.dataflash-clear-text {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 12px;
+  color: #868e96;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.dataflash-clear-text:hover {
+  color: #495057;
+  background-color: #f1f3f5;
+}
+
 .dataflash-input {
   cursor: text;
   width: 100%;
   padding: 8px;
-  margin-bottom: 8px;
+  padding-bottom: 28px;
+  margin-bottom: 0;
   border: 1px solid #e9ecef;
   border-radius: 8px;
   font-size: 13px;
@@ -190,6 +215,8 @@ export const contentStyles = `
 
 .dataflash-actions {
   margin-bottom: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 .dataflash-flush-btn {

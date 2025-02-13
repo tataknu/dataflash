@@ -100,21 +100,20 @@ export class Panel {
       className: 'dataflash-section-header',
       innerHTML: '<h4>Input</h4>'
     });
+    const inputWrapper = DOMService.createElement('div', { className: 'dataflash-input-wrapper' });
     const textarea = DOMService.createElement('textarea', {
       className: 'dataflash-input',
       placeholder: 'Paste data here...',
       rows: '6'
     });
-    inputSection.appendChild(inputHeader);
-    inputSection.appendChild(textarea);
-
-    // Create actions section
-    const actions = DOMService.createElement('div', { className: 'dataflash-actions' });
-    const clearButton = DOMService.createElement('button', {
-      className: 'dataflash-flush-btn',
+    const clearText = DOMService.createElement('span', {
+      className: 'dataflash-clear-text',
       textContent: 'Clear'
     });
-    actions.appendChild(clearButton);
+    inputWrapper.appendChild(textarea);
+    inputWrapper.appendChild(clearText);
+    inputSection.appendChild(inputHeader);
+    inputSection.appendChild(inputWrapper);
 
     // Create output section
     const outputSection = DOMService.createElement('div', { className: 'dataflash-section' });
@@ -130,7 +129,6 @@ export class Panel {
     
     // Add all sections to content
     content.appendChild(inputSection);
-    content.appendChild(actions);
     content.appendChild(outputSection);
 
     // Add content to panel
@@ -169,7 +167,7 @@ export class Panel {
     const minimizeBtn = panel.querySelector('.dataflash-minimize');
     const closeBtn = panel.querySelector('.dataflash-close');
     const addTabBtn = panel.querySelector('.dataflash-add-tab');
-    const clearBtn = panel.querySelector('.dataflash-flush-btn');
+    const clearText = panel.querySelector('.dataflash-clear-text');
 
     // Panel controls
     minimizeBtn.addEventListener('click', (e) => {
@@ -257,8 +255,8 @@ export class Panel {
       this.tabs.updateTabs(panel, () => this.updateSavedDisplay());
     });
 
-    // Clear button
-    clearBtn.addEventListener('click', () => {
+    // Clear text
+    clearText.addEventListener('click', () => {
       textarea.value = '';
       textarea.dispatchEvent(new Event('input'));
     });
