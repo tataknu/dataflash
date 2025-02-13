@@ -283,7 +283,11 @@ export class Panel {
           </div>
           <div class="dataflash-df-actions">
             <button class="dataflash-save-df-btn" title="Save Dataframe">+</button>
-            <button class="dataflash-clear-df-btn" title="Clear Dataframe">-</button>
+            <button class="dataflash-clear-df-btn" title="Clear Dataframe">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
           </div>
         `
       });
@@ -357,9 +361,9 @@ export class Panel {
                     <path d="M18 15l-6 6-6-6"/>
                   </svg>
                 </button>
-                <button class="dataflash-delete-btn" data-index="${index}" title="Delete Dataframe">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                <button class="dataflash-delete-btn" data-index="${index}" title="Delete">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                 </button>
               </div>
@@ -405,13 +409,13 @@ export class Panel {
               <span class="dataflash-saved-value">${sum.value.toLocaleString()}</span>
             </div>
             <div class="dataflash-saved-controls">
-          <button class="dataflash-delete-btn" data-index="${index}" title="Delete">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-            </svg>
-          </button>
-        </div>
-      </div>
+              <button class="dataflash-delete-btn" data-index="${index}" title="Delete">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
         `;
       }
     }).join('');
@@ -569,7 +573,11 @@ export class Panel {
                 <h4>Reloaded Data: ${dataframe.label}</h4>
                 <div class="dataflash-stats-actions">
                   <button class="dataflash-expand-btn" title="Expand">⤢</button>
-                  <button class="dataflash-clear-stats-btn" title="Clear">-</button>
+                  <button class="dataflash-clear-df-btn" title="Clear">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
                 </div>
               </div>
               <div class="dataflash-reloaded-content" style="--num-columns: ${dataframe.columns.length}">
@@ -604,7 +612,7 @@ export class Panel {
           }
 
           // Add clear button event listener
-          const clearButton = reloadedData.querySelector('.dataflash-clear-stats-btn');
+          const clearButton = reloadedData.querySelector('.dataflash-clear-df-btn');
           if (clearButton) {
             clearButton.addEventListener('click', () => {
               if (currentMetricsDiv) {

@@ -305,12 +305,16 @@ export const contentStyles = `
   border: 1px solid #74c0fc;
   border-radius: 6px;
   cursor: pointer;
-  padding: 4px 12px;
+  padding: 4px;
   font-size: 14px;
   color: #1971c2;
+  width: 28px;
   height: 28px;
   line-height: 1;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dataflash-save-df-btn:hover {
@@ -980,12 +984,27 @@ export const dfControlsStyles = `
   border: 1px solid #ffa8a8;
   border-radius: 6px;
   cursor: pointer;
-  padding: 4px 12px;
+  padding: 4px;
   font-size: 14px;
   color: #e03131;
+  width: 28px;
   height: 28px;
   line-height: 1;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dataflash-df-controls .dataflash-delete-btn svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  display: block;
 }
 
 .dataflash-df-controls .dataflash-delete-btn:hover {
@@ -1149,23 +1168,73 @@ export const addTabStyles = `
 `;
 
 export const clearDfBtnStyles = `
+.dataflash-df-actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
 .dataflash-clear-df-btn {
   background: #ffe3e3;
   border: 1px solid #ffa8a8;
   border-radius: 6px;
   cursor: pointer;
-  padding: 4px 12px;
+  padding: 4px;
   font-size: 14px;
   color: #e03131;
+  width: 28px;
   height: 28px;
   line-height: 1;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dataflash-clear-df-btn svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  display: block;
 }
 
 .dataflash-clear-df-btn:hover {
   background: #ffc9c9;
   border-color: #ff8787;
   transform: translateY(-1px);
+}
+
+.dataflash-save-df-btn {
+  background: #e7f5ff;
+  border: 1px solid #74c0fc;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 14px;
+  color: #1971c2;
+  width: 28px;
+  height: 28px;
+  line-height: 1;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dataflash-save-df-btn:hover {
+  background: #d0ebff;
+  border-color: #339af0;
+  transform: translateY(-1px);
+}
+
+.dataflash-stats-actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
 }
 `;
 

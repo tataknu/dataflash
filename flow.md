@@ -4,14 +4,25 @@
 
 ### Core Components
 - Panel: `src/js/components/Panel.js`
+  - Main UI component
+  - Panel state management
+  - Event handling
+  - Reset and minimize functionality
 - Calculator: `src/js/components/Calculator.js`
+  - Calculator mode toggle
+  - Expression processing
+  - Result display
 - Tabs: `src/js/components/Tabs.js`
+  - Tab management
+  - State persistence
 - DOMService: `src/js/services/domService.js`
+  - DOM manipulation utilities
+  - Clipboard operations
 
 ### Utilities
 - Data Processing: `src/js/utils/parser.js`
-  - `parseClipboardData`
-  - `calculateMetrics`
+  - `parseClipboardData`: Data parsing
+  - `calculateMetrics`: Metrics computation
 
 ### Styles
 - Component Styles: `src/js/styles/styles.js`
@@ -19,40 +30,171 @@
   - Button styles
   - Table styles
   - Animation styles
+  - Clear text styles
+  - Responsive layout styles
 
 ### Constants
 - Configuration: `src/js/constants/config.js`
   - Icon URLs
   - Default values
 
-## Component Interactions by File
+## Component Interactions
 
-### Panel.js (`src/js/components/Panel.js`)
-- Creates main UI structure
-- Manages event listeners
-- Coordinates data flow
-- Handles drag functionality
-- Manages DataFrame operations
+### Panel Component
+1. **Initialization**
+   - Creates main UI structure
+   - Sets up event listeners
+   - Initializes calculator and tabs
+   - Sets default dimensions
 
-### Calculator.js (`src/js/components/Calculator.js`)
-- Toggle calculator mode
-- Process expressions
-- Update results display
+2. **State Management**
+   - Tracks panel position
+   - Manages minimize/maximize state
+   - Handles expanded state
+   - Controls reset functionality
 
-### Tabs.js (`src/js/components/Tabs.js`)
-- Tab creation and management
-- Tab state persistence
-- Active tab tracking
+3. **UI Updates**
+   - Updates metrics display
+   - Manages saved items
+   - Handles clear functionality
+   - Controls panel dimensions
 
-### domService.js (`src/js/services/domService.js`)
-- DOM element creation
-- Clipboard operations
-- UI updates
+### Calculator Component
+1. **Mode Management**
+   - Toggles calculator mode
+   - Updates UI state
+   - Processes expressions
 
-### parser.js (`src/js/utils/parser.js`)
-- Data parsing logic
-- Metrics calculation
-- Number formatting
+2. **Result Handling**
+   - Displays calculation results
+   - Updates metrics display
+   - Manages copy functionality
+
+### Panel Dimensions
+1. **Default State**
+   - Width: 400px
+   - Min Height: 100px
+   - Max Height: 90vh
+   - Auto Height
+
+2. **Minimized State**
+   - Width: 32px
+   - Height: 32px
+   - Border Radius: 50%
+
+3. **Expanded State**
+   - Width: 1000px
+   - Maintains height constraints
+
+### Event Flow
+1. **Panel Controls**
+   - Reset: Restores initial dimensions and position
+   - Minimize: Toggles minimized state
+   - Close: Removes panel
+
+2. **Input Handling**
+   - Clear text click: Clears input and results
+   - Calculator toggle: Switches calculator mode
+   - Data input: Processes and displays results
+
+3. **Drag Functionality**
+   - Mouse down: Initiates drag
+   - Mouse move: Updates position
+   - Mouse up: Finalizes position
+
+## State Management
+
+### Panel States
+1. **Normal**
+   - Full functionality
+   - Standard dimensions
+   - All features accessible
+
+2. **Minimized**
+   - Icon only
+   - Circular shape
+   - Click to restore
+
+3. **Expanded**
+   - Wider view
+   - Enhanced data display
+   - Toggle via expand button
+
+### Data States
+1. **Input Processing**
+   - Raw data parsing
+   - Metrics calculation
+   - Result display
+
+2. **Calculator Mode**
+   - Expression evaluation
+   - Result display
+   - Copy functionality
+
+3. **Saved Data**
+   - DataFrame storage
+   - Statistics view
+   - Column management
+
+## UI Components
+
+### Input Section
+- Textarea for data input
+- Clear text in bottom right
+- Placeholder text
+- Auto-resize behavior
+
+### Output Section
+- Metrics display
+- Saved items
+- Statistics view
+- Copy functionality
+
+### Controls
+- Panel manipulation
+- Calculator toggle
+- Tab management
+- Clear functionality
+
+## Style Organization
+
+### Panel Layout
+- Flex-based structure
+- Responsive dimensions
+- Smooth transitions
+- State-based styling
+
+### Interactive Elements
+- Hover effects
+- Click feedback
+- Transition animations
+- Clear text styling
+
+### Responsive Behavior
+- Max height constraints
+- Auto-sizing
+- Overflow management
+- Mobile considerations
+
+## Recent Updates
+
+### UI Improvements
+- Replaced clear button with text
+- Enhanced reset functionality
+- Improved dimension management
+- Added transition effects
+
+### Functionality Updates
+- Better state management
+- Improved reset behavior
+- Enhanced minimize/maximize
+- Optimized panel dimensions
+
+### Code Organization
+- Structured component logic
+- Clear state management
+- Documented changes
+- Improved maintainability
 
 ## Class Diagram
 
