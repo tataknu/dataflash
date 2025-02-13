@@ -29,13 +29,21 @@ export class Panel {
     const panel = DOMService.createElement('div', {
       className: 'dataflash-panel',
       style: `
-        width: ${this.initialWidth}px;
-        min-height: ${this.initialHeight}px;
+        width: 400px;
+        min-height: 100px;
         height: auto;
         max-height: 90vh;
-        transform: translate(${this.xOffset}px, ${this.yOffset}px);
+        transform: translate(0px, 0px);
       `
     });
+    
+    // Add minimized icon (separate from header)
+    const minimizedIcon = DOMService.createElement('img', {
+      className: 'dataflash-icon',
+      src: ICON_URL,
+      alt: 'DataFlash'
+    });
+    panel.appendChild(minimizedIcon);
     
     // Create header with controls
     const header = DOMService.createElement('div', { className: 'dataflash-header' });
@@ -271,6 +279,7 @@ export class Panel {
     
     // Add df label and save button if metrics exist
     if (metrics.length > 0) {
+      metricsContainer.classList.add('has-content');
       const headerDiv = DOMService.createElement('div', {
         className: 'dataflash-df-header',
         innerHTML: `
@@ -284,6 +293,8 @@ export class Panel {
         `
       });
       currentMetricsDiv.appendChild(headerDiv);
+    } else {
+      metricsContainer.classList.remove('has-content');
     }
 
     // Add table header
@@ -339,11 +350,16 @@ export class Panel {
         return `
           <div class="dataflash-saved-item dataframe">
             <div class="dataflash-saved-header">
-        <span class="dataflash-saved-label" data-index="${index}">${sum.label}</span>
+              <span class="dataflash-saved-label" data-index="${index}">${sum.label}</span>
               <div class="dataflash-df-controls">
                 <button class="dataflash-reload-df-btn" data-index="${index}" title="Reload Dataframe">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                  </svg>
+                </button>
+                <button class="dataflash-minimize-df-btn" data-index="${index}" title="Minimize Dataframe">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M18 15l-6 6-6-6"/>
                   </svg>
                 </button>
                 <button class="dataflash-delete-btn" data-index="${index}" title="Delete Dataframe">
@@ -366,18 +382,18 @@ export class Panel {
                   <div class="dataflash-table-col">
                     <div class="dataflash-column-controls">
                       <button class="dataflash-copy-btn" data-index="${index}" data-col="${colIndex}" title="Copy">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-          </button>
-          ${!this.calculator.isEnabled ? `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                      </button>
+                      ${!this.calculator.isEnabled ? `
                         <button class="dataflash-stats-btn" data-index="${index}" data-col="${colIndex}" title="Statistics">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M18 20V10M12 20V4M6 20v-6"/>
-              </svg>
-            </button>
-          ` : ''}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M18 20V10M12 20V4M6 20v-6"/>
+                          </svg>
+                        </button>
+                      ` : ''}
                     </div>
                   </div>
                 </div>
@@ -607,7 +623,17 @@ export class Panel {
           if (expandButton) {
             expandButton.addEventListener('click', () => {
               const panel = document.querySelector('.dataflash-panel');
-              panel.classList.toggle('expanded');
+              if (panel) {
+                panel.classList.toggle('expanded');
+                // Update button state
+                expandButton.classList.toggle('expanded');
+                // Ensure proper width transition
+                if (panel.classList.contains('expanded')) {
+                  panel.style.width = '1000px';
+                } else {
+                  panel.style.width = `${this.initialWidth}px`;
+                }
+              }
             });
           }
         }
@@ -767,6 +793,16 @@ export class Panel {
         }
       });
     });
+
+    // Minimize dataframe buttons
+    container.querySelectorAll('.dataflash-minimize-df-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const savedItem = btn.closest('.dataflash-saved-item');
+        if (savedItem) {
+          savedItem.classList.toggle('minimized');
+        }
+      });
+    });
   }
 
   /**
@@ -864,12 +900,33 @@ export class Panel {
     if (!panel) return;
 
     this.isMinimized = !this.isMinimized;
+    
     if (this.isMinimized) {
+      // First add the class to start the transition
+      panel.classList.add('minimized');
+      
+      // Force a reflow to ensure the transition starts
+      panel.offsetHeight;
+      
+      // Then apply the size changes
+      panel.style.width = '32px';
       panel.style.height = '32px';
-      panel.classList.add('dataflash-minimized');
+      panel.style.minHeight = '32px';
+      panel.style.padding = '4px';
+      panel.style.borderRadius = '50%';
     } else {
+      // Remove minimized class first
+      panel.classList.remove('minimized');
+      
+      // Force a reflow to ensure the transition starts
+      panel.offsetHeight;
+      
+      // Then restore original dimensions
+      panel.style.width = `${this.initialWidth}px`;
       panel.style.height = `${this.initialHeight}px`;
-      panel.classList.remove('dataflash-minimized');
+      panel.style.minHeight = `${this.initialHeight}px`;
+      panel.style.padding = '16px';
+      panel.style.borderRadius = '12px';
     }
   }
 }

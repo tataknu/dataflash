@@ -10,6 +10,8 @@ export const panelStyles = `
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
   z-index: 2147483647;
   width: 400px;
+  min-height: 100px;
+  height: auto;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -18,8 +20,9 @@ export const panelStyles = `
   user-select: none;
   color: #1a1a1a;
   box-sizing: border-box;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  transform-origin: center;
 }
 
 .dataflash-panel.dragging {
@@ -35,8 +38,8 @@ export const panelStyles = `
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
-  padding-bottom: 12px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
   border-bottom: 1px solid #e9ecef;
   cursor: move;
   flex-shrink: 0;
@@ -55,22 +58,21 @@ export const panelStyles = `
 .dataflash-icon {
   width: 24px;
   height: 24px;
-  margin-right: 8px;
   object-fit: contain;
   opacity: 0.9;
   display: none;
 }
 
 .dataflash-panel.expanded {
-  width: 1000px;
+  width: 1000px !important;
 }
 
 .dataflash-content {
+  margin-top: 8px;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
-  min-height: 0;
-  overflow: hidden;
+  min-height: auto;
+  height: fit-content;
 }
 `;
 
@@ -136,29 +138,22 @@ export const buttonStyles = `
 `;
 
 export const contentStyles = `
-.dataflash-content {
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  min-height: 0;
-}
-
 .dataflash-section {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   display: flex;
   flex-direction: column;
+  min-height: auto;
+  height: fit-content;
 }
 
 .dataflash-section:last-child {
   margin-bottom: 0;
-  flex-grow: 1;
-  min-height: 0;
+  min-height: auto;
+  height: fit-content;
 }
 
 .dataflash-section-header {
-  margin-bottom: 8px;
-  flex-shrink: 0;
+  margin-bottom: 4px;
 }
 
 .dataflash-section-header h4 {
@@ -171,8 +166,8 @@ export const contentStyles = `
 .dataflash-input {
   cursor: text;
   width: 100%;
-  padding: 12px;
-  margin-bottom: 12px;
+  padding: 8px;
+  margin-bottom: 8px;
   border: 1px solid #e9ecef;
   border-radius: 8px;
   font-size: 13px;
@@ -194,10 +189,7 @@ export const contentStyles = `
 }
 
 .dataflash-actions {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-  flex-shrink: 0;
+  margin-bottom: 8px;
 }
 
 .dataflash-flush-btn {
@@ -218,15 +210,33 @@ export const contentStyles = `
 
 .dataflash-metrics {
   background: #f8f9fa;
-  padding: 12px;
+  padding: 8px;
   border-radius: 8px;
   font-size: 13px;
   border: 1px solid #e9ecef;
   overflow-y: auto;
-  flex-grow: 1;
-  min-height: 0;
-  max-height: calc(90vh - 400px);
-  scrollbar-width: thin;
+  min-height: auto;
+  height: fit-content;
+  transition: all 0.3s ease;
+}
+
+.dataflash-metrics:not(:empty) {
+  min-height: auto;
+}
+
+.dataflash-metrics.has-content {
+  min-height: auto;
+}
+
+.dataflash-current-metrics {
+  min-height: auto;
+  height: fit-content;
+}
+
+.dataflash-saved {
+  margin-top: 8px;
+  min-height: auto;
+  height: fit-content;
 }
 
 .dataflash-metrics::-webkit-scrollbar {
@@ -251,8 +261,8 @@ export const contentStyles = `
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
   border-bottom: 1px solid #e9ecef;
 }
 
@@ -289,16 +299,16 @@ export const contentStyles = `
 .dataflash-metric-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
-  padding: 8px 0;
+  padding: 4px 0;
   border-bottom: 1px solid #e9ecef;
 }
 
 .dataflash-metric-row.header {
   font-weight: 600;
   color: #495057;
-  padding-bottom: 12px;
+  padding-bottom: 6px;
   border-bottom: 2px solid #e9ecef;
 }
 
@@ -396,24 +406,31 @@ export const tabStyles = `
 
 export const minimizedStyles = `
 .dataflash-panel.minimized {
-  padding: 2px;
-  min-width: auto;
-  width: 48px;
-  height: 48px;
-  overflow: hidden;
-  border-radius: 50%;
-  cursor: pointer;
+  width: 62px !important;
+  height: 62px !important;
+  min-height: 62px !important;
+  padding: 6px !important;
+  border-radius: 50% !important;
+  cursor: move;
   background: #ffffff;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-  transition: all 0.2s ease;
+  position: fixed;
+  z-index: 2147483647;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  transform-origin: center;
 }
 
 .dataflash-panel.minimized .dataflash-icon {
   display: block;
-  width: 44px;
-  height: 44px;
+  width: 54px;
+  height: 54px;
   margin: 0;
   opacity: 1;
+  transition: opacity 0.3s ease;
+  object-fit: contain;
 }
 
 .dataflash-panel.minimized:hover {
@@ -423,15 +440,18 @@ export const minimizedStyles = `
 
 .dataflash-panel.minimized .dataflash-content,
 .dataflash-panel.minimized .dataflash-controls,
-.dataflash-panel.minimized .dataflash-title span {
+.dataflash-panel.minimized .dataflash-title,
+.dataflash-panel.minimized .dataflash-tabs,
+.dataflash-panel.minimized .dataflash-header {
+  opacity: 0;
+  visibility: hidden;
   display: none;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
-.dataflash-panel.minimized .dataflash-header {
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.dataflash-panel.minimized.dragging {
+  transition: none;
+  opacity: 0.9;
 }
 `;
 
@@ -440,9 +460,9 @@ export const calculatorStyles = `
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   font-size: 13px;
-  padding: 12px;
+  padding: 8px;
   background: #f8f9fa;
   border-radius: 8px;
   border: 1px solid #e9ecef;
@@ -523,23 +543,23 @@ input:checked + .dataflash-toggle-slider:before {
 }
 
 .dataflash-saved {
-  margin-top: 12px;
+  margin-top: 8px;
 }
 
 .dataflash-saved-item {
-  padding: 8px 0;
+  padding: 4px 0;
   border-bottom: 1px solid #e9ecef;
 }
 
 .dataflash-saved-item.dataframe {
-  padding: 12px 0;
+  padding: 6px 0;
 }
 
 .dataflash-saved-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .dataflash-saved-table {
@@ -552,8 +572,8 @@ input:checked + .dataflash-toggle-slider:before {
 .dataflash-table-header {
   display: grid;
   grid-template-columns: 1fr 1fr 120px;
-  gap: 12px;
-  padding: 8px 12px;
+  gap: 8px;
+  padding: 6px 8px;
   background: #e9ecef;
   font-weight: 600;
   color: #495057;
@@ -562,8 +582,8 @@ input:checked + .dataflash-toggle-slider:before {
 .dataflash-table-row {
   display: grid;
   grid-template-columns: 1fr 1fr 120px;
-  gap: 12px;
-  padding: 8px 12px;
+  gap: 8px;
+  padding: 6px 8px;
   align-items: center;
   border-bottom: 1px solid #e9ecef;
 }
@@ -698,12 +718,13 @@ export const statsStyles = `
   border: 1px solid #e9ecef;
   border-radius: 6px;
   overflow: hidden;
+  margin-bottom: 8px;
 }
 
 .dataflash-stats-header,
 .dataflash-reloaded-header {
   background: #f8f9fa;
-  padding: 12px;
+  padding: 8px;
   border-bottom: 1px solid #e9ecef;
   display: flex;
   justify-content: space-between;
@@ -728,14 +749,16 @@ export const statsStyles = `
 
 .dataflash-stats-content,
 .dataflash-reloaded-content {
-  padding: 12px;
+  padding: 8px;
   width: 100%;
   overflow: hidden;
+  height: fit-content;
+  min-height: auto;
 }
 
 .dataflash-stats-section {
-  margin-bottom: 16px;
-  padding-bottom: 16px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
   border-bottom: 1px solid #e9ecef;
 }
 
@@ -756,7 +779,7 @@ export const statsStyles = `
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 0;
+  padding: 4px 0;
 }
 
 .dataflash-stats-row:not(:last-child) {
@@ -826,7 +849,8 @@ export const dfControlsStyles = `
   gap: 4px;
 }
 
-.dataflash-reload-df-btn {
+.dataflash-reload-df-btn,
+.dataflash-minimize-df-btn {
   background: #fff3bf;
   border: 1px solid #ffd43b;
   border-radius: 6px;
@@ -841,6 +865,12 @@ export const dfControlsStyles = `
   transition: all 0.2s ease;
 }
 
+.dataflash-minimize-df-btn {
+  background: #e7f5ff;
+  border-color: #74c0fc;
+  color: #1971c2;
+}
+
 .dataflash-reload-df-btn:hover {
   background: #fff3bf;
   border-color: #ffd43b;
@@ -848,7 +878,26 @@ export const dfControlsStyles = `
   transform: translateY(-1px);
 }
 
-.dataflash-reload-df-btn svg {
+.dataflash-minimize-df-btn:hover {
+  background: #d0ebff;
+  border-color: #339af0;
+  transform: translateY(-1px);
+}
+
+.dataflash-minimize-df-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.dataflash-saved-item.minimized .dataflash-minimize-df-btn svg {
+  transform: rotate(-180deg);
+}
+
+.dataflash-saved-item.minimized .dataflash-saved-table {
+  display: none;
+}
+
+.dataflash-reload-df-btn svg,
+.dataflash-minimize-df-btn svg {
   width: 13px;
   height: 13px;
   fill: none;
@@ -880,7 +929,8 @@ export const dfControlsStyles = `
 .dataflash-reloaded-content .dataflash-table-wrapper {
   overflow: auto;
   width: 100%;
-  max-height: 300px;
+  max-height: none;
+  height: auto;
   scrollbar-width: thin;
   border: 1px solid #e9ecef;
   border-radius: 6px;
@@ -952,6 +1002,9 @@ export const expandStyles = `
   height: 28px;
   line-height: 1;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dataflash-expand-btn:hover {
@@ -960,8 +1013,22 @@ export const expandStyles = `
   transform: translateY(-1px);
 }
 
-.dataflash-panel.expanded .dataflash-expand-btn {
+.dataflash-expand-btn::before {
+  content: "⤢";
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.dataflash-expand-btn.expanded::before {
   transform: rotate(180deg);
+}
+
+.dataflash-reloaded-content {
+  transition: all 0.3s ease;
+}
+
+.dataflash-panel.expanded .dataflash-reloaded-content {
+  width: 100%;
 }
 `;
 
