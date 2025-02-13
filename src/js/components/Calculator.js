@@ -11,70 +11,18 @@ export class Calculator {
    * @returns {HTMLElement} Calculator toggle element
    */
   createToggle() {
-    const container = DOMService.createElement('div', {
-      className: 'dataflash-calculator-toggle'
+    const button = DOMService.createElement('button', {
+      className: 'dataflash-calc-btn',
+      textContent: '=',
+      title: 'Toggle Calculator Mode'
     });
-
-    const leftSection = DOMService.createElement('div', {
-      className: 'dataflash-calc-left'
-    });
-
-    const toggle = DOMService.createElement('label', {
-      className: 'dataflash-toggle'
-    });
-
-    const input = DOMService.createElement('input', {
-      type: 'checkbox',
-      id: 'calcToggle',
-      checked: this.isEnabled
-    });
-
-    const slider = DOMService.createElement('span', {
-      className: 'dataflash-toggle-slider'
-    });
-
-    const label = DOMService.createElement('span', {
-      className: 'dataflash-calc-label',
-      textContent: 'Calculator'
-    });
-
-    const resultContainer = DOMService.createElement('div', {
-      className: 'dataflash-calc-container'
-    });
-
-    const result = DOMService.createElement('span', {
-      className: 'dataflash-calc-result'
-    });
-
-    toggle.appendChild(input);
-    toggle.appendChild(slider);
-    leftSection.appendChild(toggle);
-    leftSection.appendChild(label);
-    resultContainer.appendChild(result);
-    container.appendChild(leftSection);
-    container.appendChild(resultContainer);
 
     // Add initial state class if calculator is enabled
     if (this.isEnabled) {
-      container.classList.add('calculator-enabled');
+      button.classList.add('active');
     }
 
-    // Add click handler for the result to copy it
-    result.addEventListener('click', () => {
-      if (result.textContent) {
-        const value = result.textContent.replace('= ', '');
-        navigator.clipboard.writeText(value);
-      }
-    });
-
-    // Add toggle handler directly to the input
-    input.addEventListener('change', () => {
-      this.isEnabled = input.checked;
-      console.log('Calculator enabled:', this.isEnabled);
-      container.classList.toggle('calculator-enabled', this.isEnabled);
-    });
-
-    return container;
+    return button;
   }
 
   /**
@@ -83,57 +31,40 @@ export class Calculator {
    * @param {Function} updateUI - Function to update the UI
    */
   handleToggle(textarea, updateUI) {
-    // Wait for elements to be available
-    const maxAttempts = 10;
-    let attempts = 0;
+    const calcBtn = document.querySelector('.dataflash-calc-btn');
+    if (!calcBtn) {
+      console.error('Calculator button not found');
+      return;
+    }
 
-    const initializeToggle = () => {
-      const calcToggle = document.querySelector('#calcToggle');
-      const container = document.querySelector('.dataflash-calculator-toggle');
+    // Add click handler to the button
+    calcBtn.addEventListener('click', () => {
+      this.isEnabled = !this.isEnabled;
+      console.log('Calculator enabled:', this.isEnabled);
       
-      if (!calcToggle || !container) {
-        if (attempts < maxAttempts) {
-          attempts++;
-          setTimeout(initializeToggle, 100); // Retry after 100ms
-          return;
-        }
-        console.error('Calculator toggle elements not found after retries');
-        return;
+      // Update button state
+      calcBtn.classList.toggle('active', this.isEnabled);
+      
+      // Update textarea placeholder based on calculator mode
+      textarea.placeholder = this.isEnabled ? 'Try writing here "1 + 2 + 3"' : 'Paste data here...';
+      
+      // Process current input if calculator is enabled
+      if (this.isEnabled && textarea.value.trim()) {
+        this.processExpression(textarea.value.trim(), updateUI);
+      } else {
+        this.updateResult('');
       }
 
-      // Add change handler to the toggle
-      calcToggle.addEventListener('change', () => {
-        this.isEnabled = calcToggle.checked;
-        console.log('Calculator enabled:', this.isEnabled);
-        
-        // Update container class
-        container.classList.toggle('calculator-enabled', this.isEnabled);
-        
-        // Update textarea placeholder based on calculator mode
-        textarea.placeholder = this.isEnabled ? 'Try writing here "1 + 2 + 3"' : 'Paste data here...';
-        
-        // Process current input if calculator is enabled
-        if (this.isEnabled && textarea.value.trim()) {
-          this.processExpression(textarea.value.trim(), updateUI);
-        } else {
-          this.updateResult('');
-        }
+      // Call the updateUI callback
+      if (updateUI) {
+        updateUI();
+      }
+    });
 
-        // Call the updateUI callback
-        if (updateUI) {
-          updateUI();
-        }
-      });
-
-      // Set initial state
-      calcToggle.checked = this.isEnabled;
-      container.classList.toggle('calculator-enabled', this.isEnabled);
-      // Set initial placeholder
-      textarea.placeholder = this.isEnabled ? 'Try writing here "1 + 2 + 3"' : 'Paste data here...';
-    };
-
-    // Start initialization
-    initializeToggle();
+    // Set initial state
+    calcBtn.classList.toggle('active', this.isEnabled);
+    // Set initial placeholder
+    textarea.placeholder = this.isEnabled ? 'Try writing here "1 + 2 + 3"' : 'Paste data here...';
   }
 
   /**
@@ -141,26 +72,48 @@ export class Calculator {
    * @param {string|number} result - The result to display
    */
   updateResult(result) {
-    const resultElement = document.querySelector('.dataflash-calc-result');
-    if (resultElement) {
-      console.log('Updating result element with:', result); // Debug log
-      
-      if (result === 'Invalid') {
-        resultElement.textContent = 'Na';
-      } else if (result === '') {
-        resultElement.textContent = '';
-      } else {
-        // Format number with commas for thousands
-        const formattedResult = typeof result === 'number' ? 
-          result.toLocaleString() : result;
-        resultElement.textContent = `= ${formattedResult}`;
-      }
+    const metricsContainer = document.querySelector('.dataflash-metrics');
+    if (!metricsContainer) return;
 
-      // Make sure the result is visible
-      resultElement.style.display = result === '' ? 'none' : 'block';
-      console.log('Result element content:', resultElement.textContent); // Debug log
-    } else {
-      console.error('Result element not found'); // Debug log
+    // Clear existing content
+    metricsContainer.innerHTML = '';
+
+    if (result === '' || result === 'Invalid' || result === 'Na') {
+      return;
+    }
+
+    // Create current metrics div
+    const currentMetricsDiv = DOMService.createElement('div', {
+      className: 'dataflash-current-metrics'
+    });
+
+    // Add result display
+    const resultDiv = DOMService.createElement('div', {
+      className: 'dataflash-metric-row',
+      innerHTML: `
+        <div class="dataflash-metric-col">Result</div>
+        <div class="dataflash-metric-col">${typeof result === 'number' ? result.toLocaleString() : result}</div>
+      `
+    });
+
+    currentMetricsDiv.appendChild(resultDiv);
+    metricsContainer.appendChild(currentMetricsDiv);
+
+    // Add click-to-copy functionality
+    const resultValue = resultDiv.querySelector('.dataflash-metric-col:last-child');
+    if (resultValue) {
+      resultValue.style.cursor = 'pointer';
+      resultValue.title = 'Click to copy';
+      resultValue.addEventListener('click', async () => {
+        const value = typeof result === 'number' ? result.toString() : result;
+        await DOMService.copyToClipboard(value);
+        
+        const originalText = resultValue.textContent;
+        resultValue.textContent = '✓ Copied!';
+        setTimeout(() => {
+          resultValue.textContent = originalText;
+        }, 1000);
+      });
     }
   }
 

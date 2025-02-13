@@ -356,6 +356,47 @@ export const tabStyles = `
   display: none;
 }
 
+.dataflash-tab-actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.dataflash-add-tab,
+.dataflash-calc-btn {
+  background: #e7f5ff;
+  border: 1px solid #74c0fc;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 4px 12px;
+  font-size: 14px;
+  color: #1971c2;
+  height: 28px;
+  line-height: 1;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dataflash-add-tab:hover,
+.dataflash-calc-btn:hover {
+  background: #d0ebff;
+  border-color: #339af0;
+  transform: translateY(-1px);
+}
+
+.dataflash-calc-btn.active {
+  background: #1971c2;
+  border-color: #1864ab;
+  color: #ffffff;
+}
+
+.dataflash-calc-btn.active:hover {
+  background: #1864ab;
+  border-color: #145591;
+}
+
 .dataflash-tab {
   padding: 6px 12px;
   border: none;

@@ -77,12 +77,18 @@ export class Panel {
     // Create tabs section
     const tabsSection = DOMService.createElement('div', { className: 'dataflash-tabs' });
     const tabList = DOMService.createElement('div', { className: 'dataflash-tab-list' });
+    const tabActions = DOMService.createElement('div', { className: 'dataflash-tab-actions' });
+    
     const addTabButton = DOMService.createElement('button', { 
       className: 'dataflash-add-tab',
-      textContent: '+'
+      textContent: '+',
+      title: 'Add New Tab'
     });
+    
+    tabActions.appendChild(addTabButton);
+    tabActions.appendChild(this.calculator.createToggle());
     tabsSection.appendChild(tabList);
-    tabsSection.appendChild(addTabButton);
+    tabsSection.appendChild(tabActions);
     panel.appendChild(tabsSection);
 
     // Create content section
@@ -121,9 +127,6 @@ export class Panel {
     metrics.appendChild(saved);
     outputSection.appendChild(outputHeader);
     outputSection.appendChild(metrics);
-
-    // Add calculator toggle first
-    content.appendChild(this.calculator.createToggle());
     
     // Add all sections to content
     content.appendChild(inputSection);
@@ -232,12 +235,6 @@ export class Panel {
         // Calculator mode - process as expression
         if (text) {
           this.calculator.processExpression(text, null);
-          
-          // Prevent data parsing in calculator mode
-          const metricsContainer = document.querySelector('.dataflash-metrics');
-          if (metricsContainer) {
-            metricsContainer.innerHTML = '';
-          }
         } else {
           this.calculator.updateResult('');
         }
