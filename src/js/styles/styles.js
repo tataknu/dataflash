@@ -9,13 +9,17 @@ export const panelStyles = `
   padding: 16px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
   z-index: 2147483647;
-  min-width: 280px;
+  width: 400px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   cursor: default;
   user-select: none;
   color: #1a1a1a;
   box-sizing: border-box;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s ease;
+  overflow: hidden;
 }
 
 .dataflash-panel.dragging {
@@ -35,6 +39,7 @@ export const panelStyles = `
   padding-bottom: 12px;
   border-bottom: 1px solid #e9ecef;
   cursor: move;
+  flex-shrink: 0;
 }
 
 .dataflash-title {
@@ -55,11 +60,24 @@ export const panelStyles = `
   opacity: 0.9;
   display: none;
 }
+
+.dataflash-panel.expanded {
+  width: 1000px;
+}
+
+.dataflash-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-height: 0;
+  overflow: hidden;
+}
 `;
 
 export const buttonStyles = `
 .dataflash-minimize,
-.dataflash-close {
+.dataflash-close,
+.dataflash-reset {
   background: none;
   border: none;
   cursor: pointer;
@@ -81,8 +99,13 @@ export const buttonStyles = `
   background-color: #ffa502;
 }
 
+.dataflash-reset {
+  background-color: #51cf66;
+}
+
 .dataflash-minimize:hover,
-.dataflash-close:hover {
+.dataflash-close:hover,
+.dataflash-reset:hover {
   opacity: 1;
   transform: scale(1.05);
 }
@@ -115,6 +138,34 @@ export const buttonStyles = `
 export const contentStyles = `
 .dataflash-content {
   margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-height: 0;
+}
+
+.dataflash-section {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dataflash-section:last-child {
+  margin-bottom: 0;
+  flex-grow: 1;
+  min-height: 0;
+}
+
+.dataflash-section-header {
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.dataflash-section-header h4 {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .dataflash-input {
@@ -132,6 +183,7 @@ export const contentStyles = `
   display: block;
   transition: all 0.2s ease;
   font-family: inherit;
+  flex-shrink: 0;
 }
 
 .dataflash-input:focus {
@@ -141,12 +193,58 @@ export const contentStyles = `
   box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.1);
 }
 
+.dataflash-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+.dataflash-flush-btn {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dataflash-flush-btn:hover {
+  background: #e9ecef;
+  border-color: #dee2e6;
+}
+
 .dataflash-metrics {
   background: #f8f9fa;
   padding: 12px;
   border-radius: 8px;
   font-size: 13px;
   border: 1px solid #e9ecef;
+  overflow-y: auto;
+  flex-grow: 1;
+  min-height: 0;
+  max-height: calc(90vh - 400px);
+  scrollbar-width: thin;
+}
+
+.dataflash-metrics::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dataflash-metrics::-webkit-scrollbar-track {
+  background: #f1f3f5;
+  border-radius: 4px;
+}
+
+.dataflash-metrics::-webkit-scrollbar-thumb {
+  background: #ced4da;
+  border-radius: 4px;
+}
+
+.dataflash-metrics::-webkit-scrollbar-thumb:hover {
+  background: #adb5bd;
 }
 
 .dataflash-df-header {
@@ -424,32 +522,8 @@ input:checked + .dataflash-toggle-slider:before {
   background-color: rgba(25, 113, 194, 0.1);
 }
 
-.dataflash-actions {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.dataflash-flush-btn {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 12px;
-  color: #495057;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.dataflash-flush-btn:hover {
-  background: #e9ecef;
-  border-color: #dee2e6;
-}
-
 .dataflash-saved {
   margin-top: 12px;
-  border-top: 1px solid #e9ecef;
-  padding-top: 12px;
 }
 
 .dataflash-saved-item {
@@ -582,11 +656,27 @@ input:checked + .dataflash-toggle-slider:before {
   color: #f08c00;
 }
 
+.dataflash-saved-controls .dataflash-delete-btn,
+.dataflash-column-controls .dataflash-delete-btn {
+  background: #ffe3e3;
+  border: 1px solid #ffa8a8;
+  padding: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: #e03131;
+}
+
 .dataflash-saved-controls .dataflash-delete-btn:hover,
 .dataflash-column-controls .dataflash-delete-btn:hover {
-  background: #ffe3e3;
-  border-color: #ffa8a8;
-  color: #e03131;
+  background: #ffc9c9;
+  border-color: #ff8787;
+  transform: translateY(-1px);
 }
 
 .dataflash-saved-controls svg,
@@ -601,6 +691,349 @@ input:checked + .dataflash-toggle-slider:before {
 }
 `;
 
+export const statsStyles = `
+.dataflash-stats-data,
+.dataflash-reloaded-data {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.dataflash-stats-header,
+.dataflash-reloaded-header {
+  background: #f8f9fa;
+  padding: 12px;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dataflash-stats-header h4,
+.dataflash-reloaded-header h4 {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dataflash-stats-title h4,
+.dataflash-reloaded-header h4 {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dataflash-stats-content,
+.dataflash-reloaded-content {
+  padding: 12px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.dataflash-stats-section {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.dataflash-stats-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.dataflash-stats-section-header {
+  color: #1971c2;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.dataflash-stats-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.dataflash-stats-row:not(:last-child) {
+  border-bottom: 1px solid #e9ecef;
+}
+
+.dataflash-stats-label {
+  color: #495057;
+  font-weight: 500;
+}
+
+.dataflash-stats-value {
+  color: #1971c2;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.dataflash-stats-value:hover {
+  background-color: #e7f5ff;
+}
+
+.dataflash-stats-value.copied {
+  background-color: #d3f9d8;
+  color: #2b8a3e;
+}
+
+.dataflash-reloaded-row {
+  padding: 6px 0;
+  color: #495057;
+}
+
+.dataflash-reloaded-row:not(:last-child) {
+  border-bottom: 1px solid #e9ecef;
+}
+
+.dataflash-stats-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.dataflash-clear-stats-btn {
+  background: #ffe3e3;
+  border: 1px solid #ffa8a8;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 4px 12px;
+  font-size: 14px;
+  color: #e03131;
+  height: 28px;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.dataflash-clear-stats-btn:hover {
+  background: #ffc9c9;
+  border-color: #ff8787;
+  transform: translateY(-1px);
+}
+`;
+
+export const dfControlsStyles = `
+.dataflash-df-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.dataflash-reload-df-btn {
+  background: #fff3bf;
+  border: 1px solid #ffd43b;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: #f08c00;
+  transition: all 0.2s ease;
+}
+
+.dataflash-reload-df-btn:hover {
+  background: #fff3bf;
+  border-color: #ffd43b;
+  color: #f08c00;
+  transform: translateY(-1px);
+}
+
+.dataflash-reload-df-btn svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dataflash-df-controls .dataflash-delete-btn {
+  background: #ffe3e3;
+  border: 1px solid #ffa8a8;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 4px 12px;
+  font-size: 14px;
+  color: #e03131;
+  height: 28px;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.dataflash-df-controls .dataflash-delete-btn:hover {
+  background: #ffc9c9;
+  border-color: #ff8787;
+  transform: translateY(-1px);
+}
+
+.dataflash-reloaded-content .dataflash-table-wrapper {
+  overflow: auto;
+  width: 100%;
+  max-height: 300px;
+  scrollbar-width: thin;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+}
+
+.dataflash-reloaded-content .dataflash-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dataflash-reloaded-content .dataflash-table-wrapper::-webkit-scrollbar-track {
+  background: #f1f3f5;
+  border-radius: 4px;
+}
+
+.dataflash-reloaded-content .dataflash-table-wrapper::-webkit-scrollbar-thumb {
+  background: #ced4da;
+  border-radius: 4px;
+}
+
+.dataflash-reloaded-content .dataflash-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #adb5bd;
+}
+
+.dataflash-reloaded-content .dataflash-table {
+  width: 100%;
+  min-width: max-content;
+}
+
+.dataflash-reloaded-content .dataflash-table-header,
+.dataflash-reloaded-content .dataflash-table-row {
+  display: grid;
+  grid-template-columns: repeat(var(--num-columns, 3), minmax(120px, 1fr));
+  gap: 12px;
+  padding: 8px 12px;
+}
+
+.dataflash-reloaded-content .dataflash-table-header {
+  background: #e9ecef;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.dataflash-reloaded-content .dataflash-table-row {
+  border-bottom: 1px solid #e9ecef;
+}
+
+.dataflash-reloaded-content .dataflash-table-row:last-child {
+  border-bottom: none;
+}
+
+.dataflash-reloaded-content .dataflash-table-col {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+`;
+
+export const expandStyles = `
+.dataflash-expand-btn {
+  background: #e7f5ff;
+  border: 1px solid #74c0fc;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 4px 12px;
+  font-size: 14px;
+  color: #1971c2;
+  height: 28px;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.dataflash-expand-btn:hover {
+  background: #d0ebff;
+  border-color: #339af0;
+  transform: translateY(-1px);
+}
+
+.dataflash-panel.expanded .dataflash-expand-btn {
+  transform: rotate(180deg);
+}
+`;
+
+export const dfNameInputStyles = `
+.dataflash-df-name-input {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  width: 150px;
+  transition: all 0.2s ease;
+}
+
+.dataflash-df-name-input:hover {
+  border-color: #e9ecef;
+}
+
+.dataflash-df-name-input:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: #74c0fc;
+}
+`;
+
+export const addTabStyles = `
+.dataflash-add-tab {
+  background: #e7f5ff;
+  border: 1px solid #74c0fc;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 4px 12px;
+  font-size: 14px;
+  color: #1971c2;
+  height: 28px;
+  line-height: 1;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dataflash-add-tab:hover {
+  background: #d0ebff;
+  border-color: #339af0;
+  transform: translateY(-1px);
+}
+`;
+
+export const clearDfBtnStyles = `
+.dataflash-clear-df-btn {
+  background: #ffe3e3;
+  border: 1px solid #ffa8a8;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 4px 12px;
+  font-size: 14px;
+  color: #e03131;
+  height: 28px;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.dataflash-clear-df-btn:hover {
+  background: #ffc9c9;
+  border-color: #ff8787;
+  transform: translateY(-1px);
+}
+`;
+
 // Combine all styles
 export const allStyles = [
   panelStyles,
@@ -608,5 +1041,11 @@ export const allStyles = [
   contentStyles,
   tabStyles,
   minimizedStyles,
-  calculatorStyles
+  calculatorStyles,
+  statsStyles,
+  dfControlsStyles,
+  expandStyles,
+  dfNameInputStyles,
+  addTabStyles,
+  clearDfBtnStyles
 ].join('\n');
